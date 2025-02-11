@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const pxToRem = require("tailwindcss-preset-px-to-rem");
 
 const config: Config = {
   content: [
@@ -16,5 +17,6 @@ const config: Config = {
     },
   },
   plugins: [],
+  presets: [pxToRem],
 };
 export default config;
