@@ -26,8 +26,23 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.todo-title-circle {
+  position: relative;
+}
+
+.todo-title-circle::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
