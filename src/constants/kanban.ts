@@ -2,19 +2,19 @@ export const KANBAN_COLUMNS = [
   {
     id: "todo",
     title: "Todo",
-    color: "before:bg-red-400/80",
+    color: "red",
     hasBorder: false,
   },
   {
     id: "onProgress",
     title: "OnProgress",
-    color: "before:bg-green-400/80",
+    color: "green",
     hasBorder: true,
   },
   {
     id: "done",
     title: "Done",
-    color: "before:bg-blue-400/80",
+    color: "blue",
     hasBorder: false,
   },
 ] as const;
