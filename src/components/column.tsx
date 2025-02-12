@@ -2,13 +2,12 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-
 import type { TaskStatus } from "@/types/task";
-
 import Card from "./card";
 import { useModalStore } from "@/store/useModalStore";
 import colorClasses from "@/constants/color";
-import CreateTask from "./create-task";
+import CreateEditTaskModal from "./create-edit-task-modal";
+
 interface ColumnProps {
   title: string;
   color: "red" | "green" | "blue";
@@ -30,6 +29,18 @@ export default function Column({
 }: ColumnProps) {
   const { openModal } = useModalStore();
 
+  const handleCreateTask = () => {
+    openModal(CreateEditTaskModal, {
+      mode: "create",
+      initialData: {
+        title: "",
+        status: "",
+        content: "",
+        dueDate: "",
+      },
+    });
+  };
+
   return (
     <div
       className={clsx("flex-1 px-20", {
@@ -47,17 +58,16 @@ export default function Column({
       <button
         type="button"
         className="mt-12 inline-block w-full rounded-4 border border-solid"
-        onClick={openModal}
+        onClick={handleCreateTask}
       >
         <Image
-          src="/icons/plus.svg"
+          src="/icons/ic_plus.svg"
           alt="plus"
           width={25}
           height={25}
           className="m-auto"
         />
       </button>
-      <CreateTask />
       {cards.map((card) => (
         <Card key={card.id} {...card} />
       ))}

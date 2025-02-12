@@ -36,7 +36,7 @@ export default function Modal({ children, isOpen, onClose }: ModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-white/10"
+          className="fixed inset-0 bg-white/30"
           onClick={onClose}
           aria-hidden="true"
         />
