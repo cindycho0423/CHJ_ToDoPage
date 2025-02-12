@@ -2,10 +2,12 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import type { TaskStatus } from "@/types/task";
-import Card from "./card";
+
+// import colorClasses from "@/constants/color";
 import { useModalStore } from "@/store/useModalStore";
-import colorClasses from "@/constants/color";
+import type { TaskStatus } from "@/types/task";
+
+import Card from "./card";
 import CreateEditTaskModal from "./create-edit-task-modal";
 
 interface ColumnProps {
@@ -20,6 +22,12 @@ interface ColumnProps {
     dueDate: string;
   }>;
 }
+
+const colorClasses = {
+  red: "before:bg-red-400/80",
+  green: "before:bg-green-400/80",
+  blue: "before:bg-blue-400/80",
+};
 
 export default function Column({
   title,
@@ -49,8 +57,8 @@ export default function Column({
     >
       <div
         className={clsx(
-          "todo-title-circle relative ml-20 text-20 font-bold",
           colorClasses[color],
+          "todo-title-circle relative ml-20 text-20 font-bold",
         )}
       >
         {title}
