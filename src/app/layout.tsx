@@ -1,3 +1,4 @@
+import ModalProvider from "@/components/common/modal/modal-provider";
 import "./globals.css";
 
 import type { Metadata } from "next";
@@ -17,7 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        <ModalProvider />
+      </body>
     </html>
   );
 }
