@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
 import React, {
   createContext,
   useContext,
@@ -6,8 +8,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import clsx from "clsx";
 
 export const PopoverContext = createContext({
   isOpen: false,
@@ -27,7 +27,7 @@ export default function Popover({ children }: { children: React.ReactNode }) {
       togglePopover,
       closePopover,
     }),
-    [isOpen],
+    [isOpen, togglePopover, closePopover],
   );
 
   useEffect(() => {

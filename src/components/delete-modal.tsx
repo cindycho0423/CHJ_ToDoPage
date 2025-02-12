@@ -1,6 +1,7 @@
 import { useModalStore } from "@/store/useModalStore";
-import Modal from "./common/modal";
+
 import Button from "./common/button";
+import Modal from "./common/modal";
 
 interface DeleteModalProps {
   id: string;

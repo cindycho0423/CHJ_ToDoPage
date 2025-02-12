@@ -4,8 +4,6 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-    "airbnb",
-    "airbnb/hooks",
     "airbnb-typescript",
     "plugin:jsx-a11y/recommended",
     "next/core-web-vitals",

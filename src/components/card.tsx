@@ -1,9 +1,10 @@
+import Image from "next/image";
+
+import { useModalStore } from "@/store/useModalStore";
 import type { TaskStatus } from "@/types/task";
 
 import Badge from "./badge";
 import Popover from "./common/popover";
-import Image from "next/image";
-import { useModalStore } from "@/store/useModalStore";
 import CreateEditTask from "./create-edit-task-modal";
 import DeleteModal from "./delete-modal";
 

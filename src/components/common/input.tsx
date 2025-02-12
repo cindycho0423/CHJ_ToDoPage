@@ -30,12 +30,12 @@ export default function Input({
           required
           type={type}
           disabled={disabled}
-          className="rounded-4 w-full border border-solid bg-black/80 p-10 outline-none"
+          className="w-full rounded-4 border border-solid bg-black/80 p-10 outline-none"
           {...register}
           {...props}
         />
         {errorMessage && (
-          <span className="text-13 ml-10 text-red-600">{errorMessage}</span>
+          <span className="ml-10 text-13 text-red-600">{errorMessage}</span>
         )}
       </div>
     </>
