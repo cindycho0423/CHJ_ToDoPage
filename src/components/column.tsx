@@ -7,8 +7,8 @@ import type { TaskStatus } from "@/types/task";
 
 import Card from "./card";
 import { useModalStore } from "@/store/useModalStore";
-import Modal from "./common/modal";
 import colorClasses from "@/constants/color";
+import CreateTask from "./create-task";
 interface ColumnProps {
   title: string;
   color: "red" | "green" | "blue";
@@ -28,7 +28,7 @@ export default function Column({
   hasBorder,
   cards = [],
 }: ColumnProps) {
-  const { isOpen, closeModal, openModal } = useModalStore();
+  const { openModal } = useModalStore();
 
   return (
     <div
@@ -38,7 +38,7 @@ export default function Column({
     >
       <div
         className={clsx(
-          "todo-title-circle text-20 relative ml-20 font-bold",
+          "todo-title-circle relative ml-20 text-20 font-bold",
           colorClasses[color],
         )}
       >
@@ -46,7 +46,7 @@ export default function Column({
       </div>
       <button
         type="button"
-        className="rounded-4 mt-12 inline-block w-full border border-solid"
+        className="mt-12 inline-block w-full rounded-4 border border-solid"
         onClick={openModal}
       >
         <Image
@@ -57,9 +57,7 @@ export default function Column({
           className="m-auto"
         />
       </button>
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        하이루
-      </Modal>
+      <CreateTask />
       {cards.map((card) => (
         <Card key={card.id} {...card} />
       ))}

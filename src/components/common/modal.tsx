@@ -45,7 +45,7 @@ export default function Modal({ children, isOpen, onClose }: ModalProps) {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="rounded-8 relative z-10 bg-black p-20"
+          className="relative z-10 rounded-12 bg-black p-26"
           role="dialog"
           aria-modal="true"
         >
