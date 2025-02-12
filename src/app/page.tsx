@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 
 import Column from "@/components/column";
