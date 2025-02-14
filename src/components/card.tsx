@@ -14,7 +14,7 @@ interface CardProps {
   content: string;
   status: TaskStatus;
   dueDate: string;
-  onTasksUpdate?: (tasks: Task[]) => void;
+  onTasksUpdate: (tasks: Task[]) => void;
 }
 
 export default function Card({
@@ -42,7 +42,7 @@ export default function Card({
   };
 
   const handleDelete = () => {
-    openModal(DeleteModal, { id });
+    openModal(DeleteModal, { id, onTasksUpdate });
   };
 
   return (

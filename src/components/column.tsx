@@ -21,7 +21,7 @@ interface ColumnProps {
     status: TaskStatus;
     dueDate: string;
   }>;
-  onTasksUpdate?: (tasks: Task[]) => void;
+  onTasksUpdate: (tasks: Task[]) => void;
 }
 
 const colorClasses = {
