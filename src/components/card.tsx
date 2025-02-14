@@ -29,6 +29,7 @@ export default function Card({
     openModal(CreateEditTask, {
       mode: "edit",
       initialData: {
+        id,
         title,
         status,
         content,
