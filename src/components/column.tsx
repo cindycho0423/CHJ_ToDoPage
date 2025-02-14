@@ -83,7 +83,7 @@ export default function Column({
         />
       </button>
       {cards.map((card) => (
-        <Card key={card.id} {...card} />
+        <Card key={card.id} {...card} onTasksUpdate={onTasksUpdate} />
       ))}
     </div>
   );

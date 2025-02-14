@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { useModalStore } from "@/store/useModalStore";
-import type { TaskStatus } from "@/types/task";
+import type { Task, TaskStatus } from "@/types/task";
 
 import Badge from "./badge";
 import Popover from "./common/popover";
@@ -14,6 +14,7 @@ interface CardProps {
   content: string;
   status: TaskStatus;
   dueDate: string;
+  onTasksUpdate?: (tasks: Task[]) => void;
 }
 
 export default function Card({
@@ -22,6 +23,7 @@ export default function Card({
   content,
   status,
   dueDate,
+  onTasksUpdate,
 }: CardProps) {
   const { openModal } = useModalStore();
 
@@ -35,6 +37,7 @@ export default function Card({
         content,
         dueDate,
       },
+      onTasksUpdate,
     });
   };
 
