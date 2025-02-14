@@ -38,7 +38,7 @@ export default function Home() {
   );
 
   return (
-    <main className="flex p-24">
+    <main className="p-24 md:flex">
       {KANBAN_COLUMNS.map((column) => (
         <Column
           key={column.id}

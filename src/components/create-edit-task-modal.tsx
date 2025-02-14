@@ -72,7 +72,7 @@ export default function CreateEditTaskModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} className="w-360">
+    <Modal isOpen={isOpen} onClose={closeModal} className="w-320 md:w-360">
       <span className="mb-20 inline-block text-24 font-bold">
         할 일 {mode === "create" ? "생성" : "수정"}
       </span>

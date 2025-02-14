@@ -46,10 +46,10 @@ export default function Card({
   };
 
   return (
-    <div className="my-12 flex min-h-180 flex-col rounded-4 border border-solid bg-white/15 p-16">
+    <div className="my-12 flex h-140 flex-col rounded-4 border border-solid bg-white/15 p-12 md:min-h-180 md:p-16">
       <div className="flex justify-between">
         <div className="flex items-center">
-          <span className="mr-6 line-clamp-1 text-24 font-semibold">
+          <span className="mr-6 line-clamp-1 text-18 font-semibold md:text-22">
             {title}
           </span>
           <Badge status={status} />
@@ -64,8 +64,10 @@ export default function Card({
           </Popover.Wrapper>
         </Popover>
       </div>
-      <div className="max-h-100 overflow-auto">{content}</div>
-      <span className="mt-auto inline-block text-right text-14">
+      <div className="max-h-100 overflow-auto text-14 md:text-16">
+        {content}
+      </div>
+      <span className="mt-auto inline-block text-right text-12 md:text-14">
         마감일: {dueDate}
       </span>
     </div>
