@@ -1,9 +1,10 @@
 import clsx from "clsx";
+import { ComponentProps } from "react";
 
-interface ButtonProps {
+interface ButtonProps extends ComponentProps<"button"> {
   text: string;
   type: "button" | "submit";
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 export default function Button({
@@ -11,6 +12,7 @@ export default function Button({
   type = "button",
   onClick,
   className,
+  ...props
 }: ButtonProps) {
   return (
     <button
@@ -20,6 +22,7 @@ export default function Button({
         className,
       )}
       onClick={onClick}
+      {...props}
     >
       {text}
     </button>
