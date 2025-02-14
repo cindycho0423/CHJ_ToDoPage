@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import React, { ReactElement } from "react";
+import { create } from "zustand";
 
 interface ModalState {
   isOpen: boolean;
