@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useId, useState } from "react";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 
 import taskSchema from "@/schemas/createTask";
@@ -16,7 +16,7 @@ interface CreateEditTaskModalProps {
   mode?: "create" | "edit";
   initialData?: Task;
   status?: TaskStatus;
-  onTasksUpdate?: (tasks: Task[]) => void; // 추가
+  onTasksUpdate?: (tasks: Task[]) => void;
 }
 
 export default function CreateEditTaskModal({
@@ -26,7 +26,6 @@ export default function CreateEditTaskModal({
   onTasksUpdate,
 }: CreateEditTaskModalProps) {
   const { isOpen, closeModal } = useModalStore();
-  const [tasks, setTasks] = useState<Task[]>([]);
   const id = useId();
   const {
     register,
@@ -39,38 +38,26 @@ export default function CreateEditTaskModal({
     defaultValues: initialData,
   });
 
-  // 로컬스토리지에서 태스크 불러오기
-  useEffect(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
-      try {
-        const parsedTasks = JSON.parse(savedTasks);
-        setTasks(parsedTasks);
-      } catch (e) {
-        // 토스트 띄우기
-      }
-    }
-  }, []);
-
   const onSubmit = async (data: Task) => {
     try {
+      const savedTasks = localStorage.getItem("tasks");
+      const currentTasks: Task[] = savedTasks ? JSON.parse(savedTasks) : [];
+
       if (mode === "create") {
         const newTask = {
           ...data,
           id: id,
           status: status || "todo",
         };
-        const updatedTasks = [newTask, ...tasks];
-        setTasks(updatedTasks);
+        const updatedTasks = [newTask, ...currentTasks];
         localStorage.setItem("tasks", JSON.stringify(updatedTasks));
         onTasksUpdate?.(updatedTasks);
       } else if (mode === "edit" && initialData) {
-        const updatedTasks = tasks.map((task) =>
+        const updatedTasks = currentTasks.map((task) =>
           task.id === initialData.id
             ? { ...data, id: task.id, status: task.status }
             : task,
         );
-        setTasks(updatedTasks);
         localStorage.setItem("tasks", JSON.stringify(updatedTasks));
         onTasksUpdate?.(updatedTasks);
       }
