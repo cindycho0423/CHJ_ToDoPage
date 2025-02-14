@@ -1,6 +1,12 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useId, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import taskSchema from "@/schemas/createTask";
 import { useModalStore } from "@/store/useModalStore";
+import { Task, TaskStatus } from "@/types/task";
 
 import Button from "./common/button";
 import Input from "./common/input";
@@ -8,55 +14,137 @@ import Modal from "./common/modal";
 
 interface CreateEditTaskModalProps {
   mode?: "create" | "edit";
-  initialData?: {
-    title: string;
-    status: string;
-    content: string;
-    dueDate: string;
-  };
+  initialData?: Task;
+  status?: TaskStatus;
+  onTasksUpdate?: (tasks: Task[]) => void; // 추가
 }
 
 export default function CreateEditTaskModal({
   mode = "create",
   initialData,
+  status,
+  onTasksUpdate,
 }: CreateEditTaskModalProps) {
   const { isOpen, closeModal } = useModalStore();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const id = useId();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    setError,
+  } = useForm<Task>({
+    resolver: zodResolver(taskSchema),
+    defaultValues: initialData,
+  });
+
+  // 로컬스토리지에서 태스크 불러오기
+  useEffect(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    if (savedTasks) {
+      try {
+        const parsedTasks = JSON.parse(savedTasks);
+        setTasks(parsedTasks);
+      } catch (e) {
+        // 토스트 띄우기
+      }
+    }
+  }, []);
+
+  const onSubmit = async (data: Task) => {
+    try {
+      if (mode === "create") {
+        const newTask = {
+          ...data,
+          id: id,
+          status: status || "todo",
+        };
+        const updatedTasks = [newTask, ...tasks];
+        setTasks(updatedTasks);
+        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+        onTasksUpdate?.(updatedTasks);
+      } else if (mode === "edit" && initialData) {
+        const updatedTasks = tasks.map((task) =>
+          task.id === initialData.id
+            ? { ...data, id: task.id, status: task.status }
+            : task,
+        );
+        setTasks(updatedTasks);
+        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+        onTasksUpdate?.(updatedTasks);
+      }
+      reset();
+      closeModal();
+    } catch (e) {
+      setError("root", {
+        type: "manual",
+        message: "태스크 저장 중 오류가 발생했습니다",
+      });
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={closeModal}>
       <span className="mb-20 inline-block text-24">
         할 일 {mode === "create" ? "생성" : "수정"}
       </span>
-      <form>
-        <Input
-          id="title"
-          label="제목"
-          placeholder="제목을 입력해주세요"
-          defaultValue={initialData?.title}
-        />
-        <label htmlFor="content" className="mb-8 inline-block w-full">
-          설명
-        </label>
-        <textarea
-          id="content"
-          placeholder="설명을 입력해주세요"
-          className="mb-12 w-full rounded-4 border border-solid bg-black/80 p-10 outline-none"
-          defaultValue={initialData?.content}
-        />
-        <Input
-          id="dueDate"
-          label="마감일"
-          placeholder="날짜를 입력해주세요"
-          type="date"
-          defaultValue={initialData?.dueDate}
-        />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {errors.root && (
+          <p className="text-sm text-red-500">{errors.root.message}</p>
+        )}
+
+        <div className="mb-12">
+          <Input
+            id="title"
+            label="제목"
+            placeholder="제목을 입력해주세요"
+            errorMessage={errors.title?.message}
+            register={register("title")}
+          />
+        </div>
+
+        <div className="mb-12">
+          <label htmlFor="content" className="mb-8 inline-block w-full">
+            설명
+          </label>
+          <textarea
+            id="content"
+            placeholder="설명을 입력해주세요"
+            className="mb-12 w-full rounded-4 border border-solid bg-black/80 p-10 outline-none"
+            {...register("content")}
+          />
+          {errors.content && (
+            <p className="mt-2 text-sm text-red-500">
+              {errors.content.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-12">
+          <Input
+            id="dueDate"
+            label="마감일"
+            type="date"
+            register={register("dueDate")}
+            errorMessage={errors.dueDate?.message}
+          />
+        </div>
+
         <div className="mt-20 flex gap-8">
-          <Button text="취소" type="button" onClick={closeModal} />
+          <Button
+            text="취소"
+            type="button"
+            onClick={() => {
+              reset();
+              closeModal();
+            }}
+          />
           <Button
             text={mode === "create" ? "생성" : "수정"}
-            type="button"
-            onClick={() => {}}
-            className="bg-white text-black"
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-white text-black disabled:opacity-50"
           />
         </div>
       </form>

@@ -6,7 +6,7 @@ interface InputProps extends ComponentProps<"input"> {
   label: string;
   type?: "text" | "date";
   errorMessage?: string;
-  register?: UseFormRegisterReturn;
+  register: UseFormRegisterReturn;
 }
 
 export default function Input({
@@ -26,7 +26,6 @@ export default function Input({
         </label>
         <input
           id={id}
-          name={id}
           required
           type={type}
           disabled={disabled}
