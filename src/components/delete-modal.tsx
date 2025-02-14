@@ -1,17 +1,31 @@
+"use client";
+
 import { useModalStore } from "@/store/useModalStore";
+import { Task } from "@/types/task";
 
 import Button from "./common/button";
 import Modal from "./common/modal";
 
 interface DeleteModalProps {
   id: string;
+  onTasksUpdate: (tasks: Task[]) => void;
 }
 
-export default function DeleteModal({ id }: DeleteModalProps) {
+export default function DeleteModal({ id, onTasksUpdate }: DeleteModalProps) {
   const { isOpen, closeModal } = useModalStore();
-
   const handleDelete = () => {
-    console.log(id);
+    try {
+      const savedTasks = localStorage.getItem("tasks");
+      const currentTasks: Task[] = savedTasks ? JSON.parse(savedTasks) : [];
+
+      const updatedTasks = currentTasks.filter((task) => task.id !== id);
+
+      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+      onTasksUpdate(updatedTasks);
+      closeModal();
+    } catch (error) {
+      // 에러 토스트 처리
+    }
   };
 
   return (

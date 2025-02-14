@@ -21,7 +21,7 @@ interface ColumnProps {
     status: TaskStatus;
     dueDate: string;
   }>;
-  onTasksUpdate?: (tasks: Task[]) => void;
+  onTasksUpdate: (tasks: Task[]) => void;
 }
 
 const colorClasses = {
@@ -83,7 +83,7 @@ export default function Column({
         />
       </button>
       {cards.map((card) => (
-        <Card key={card.id} {...card} />
+        <Card key={card.id} {...card} onTasksUpdate={onTasksUpdate} />
       ))}
     </div>
   );
