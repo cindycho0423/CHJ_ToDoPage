@@ -3,14 +3,14 @@
 import clsx from "clsx";
 import Image from "next/image";
 
-// import colorClasses from "@/constants/color";
 import { useModalStore } from "@/store/useModalStore";
-import type { TaskStatus } from "@/types/task";
+import type { Task, TaskStatus } from "@/types/task";
 
 import Card from "./card";
 import CreateEditTaskModal from "./create-edit-task-modal";
 
 interface ColumnProps {
+  status: TaskStatus;
   title: string;
   color: "red" | "green" | "blue";
   hasBorder?: boolean;
@@ -21,6 +21,7 @@ interface ColumnProps {
     status: TaskStatus;
     dueDate: string;
   }>;
+  onTasksUpdate?: (tasks: Task[]) => void;
 }
 
 const colorClasses = {
@@ -30,10 +31,12 @@ const colorClasses = {
 };
 
 export default function Column({
+  status,
   title,
   color,
   hasBorder,
   cards = [],
+  onTasksUpdate,
 }: ColumnProps) {
   const { openModal } = useModalStore();
 
@@ -41,11 +44,14 @@ export default function Column({
     openModal(CreateEditTaskModal, {
       mode: "create",
       initialData: {
+        id: "",
         title: "",
-        status: "",
+        status: status,
         content: "",
         dueDate: "",
       },
+      status: status,
+      onTasksUpdate,
     });
   };
 
