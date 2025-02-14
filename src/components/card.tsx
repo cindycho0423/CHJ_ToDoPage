@@ -64,7 +64,7 @@ export default function Card({
           </Popover.Wrapper>
         </Popover>
       </div>
-      <div className="overflow-auto">{content}</div>
+      <div className="max-h-100 overflow-auto">{content}</div>
       <span className="mt-auto inline-block text-right text-14">
         마감일: {dueDate}
       </span>
