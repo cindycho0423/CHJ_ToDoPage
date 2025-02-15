@@ -72,8 +72,8 @@ export default function CreateEditTaskModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal}>
-      <span className="mb-20 inline-block text-24">
+    <Modal isOpen={isOpen} onClose={closeModal} className="w-320 md:w-360">
+      <span className="mb-20 inline-block text-24 font-bold">
         할 일 {mode === "create" ? "생성" : "수정"}
       </span>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -84,7 +84,7 @@ export default function CreateEditTaskModal({
         <div className="mb-12">
           <Input
             id="title"
-            label="제목"
+            label="제목 *"
             placeholder="제목을 입력해주세요"
             errorMessage={errors.title?.message}
             register={register("title")}
@@ -111,7 +111,7 @@ export default function CreateEditTaskModal({
         <div className="mb-12">
           <Input
             id="dueDate"
-            label="마감일"
+            label="마감일 *"
             type="date"
             register={register("dueDate")}
             errorMessage={errors.dueDate?.message}

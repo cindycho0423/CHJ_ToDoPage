@@ -1,6 +1,8 @@
 import { ComponentProps } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
+import cn from "@/utils/cn";
+
 interface InputProps extends ComponentProps<"input"> {
   id: string;
   label: string;
@@ -16,6 +18,7 @@ export default function Input({
   errorMessage = "",
   register,
   disabled,
+  className,
   ...props
 }: InputProps) {
   return (
@@ -29,7 +32,10 @@ export default function Input({
           required
           type={type}
           disabled={disabled}
-          className="w-full rounded-4 border border-solid bg-black/80 p-10 outline-none"
+          className={cn(
+            className,
+            "w-full rounded-4 border border-solid bg-black/80 p-10 outline-none",
+          )}
           {...register}
           {...props}
         />

@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
   createContext,
@@ -8,6 +7,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+
+import cn from "@/utils/cn";
 
 export const PopoverContext = createContext({
   isOpen: false,
@@ -78,10 +79,7 @@ function Toggle({
         }
       }}
       tabIndex={0}
-      className={clsx(
-        "rounded-full transition-all hover:bg-white/20",
-        className,
-      )}
+      className={cn("rounded-full hover:bg-white/20", className)}
     >
       {children}
     </button>
@@ -97,7 +95,7 @@ function Wrapper({
 }) {
   const { isOpen } = useContext(PopoverContext);
 
-  const wrapperClassName = clsx(
+  const wrapperClassName = cn(
     "z-50 absolute top-35 rounded-8 border border-solid bg-black text-white px-8 py-6 text-center",
     className,
   );
