@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -18,9 +19,15 @@ export const PopoverContext = createContext({
 
 export default function Popover({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const togglePopover = () => setIsOpen(!isOpen);
-  const closePopover = () => setIsOpen(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const togglePopover = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const closePopover = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
   const providerValue = useMemo(
     () => ({
