@@ -1,31 +1,47 @@
+import { useDraggable } from "@dnd-kit/core";
+import clsx from "clsx";
 import Image from "next/image";
 
 import { useModalStore } from "@/store/useModalStore";
-import type { Task, TaskStatus } from "@/types/task";
+import type { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
 import Badge from "./badge";
 import Popover from "./common/popover";
 import CreateEditTask from "./create-edit-task-modal";
 import DeleteModal from "./delete-modal";
 
-interface CardProps {
-  id: string;
-  title: string;
-  content: string;
-  status: TaskStatus;
-  dueDate: string;
-  onTasksUpdate: (tasks: Task[]) => void;
+interface CardProps extends Todo {
+  status: TodoStatus;
+  index: number;
+  onTasksUpdate: (kanbanData: KanbanData) => void;
 }
 
 export default function Card({
   id,
   title,
-  content,
+  description,
   status,
   dueDate,
+  index,
   onTasksUpdate,
 }: CardProps) {
   const { openModal } = useModalStore();
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id,
+      data: {
+        type: "Card",
+        status,
+        index,
+        card: { id, title, description, status, dueDate },
+      },
+    });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   const handleEdit = () => {
     openModal(CreateEditTask, {
@@ -33,10 +49,10 @@ export default function Card({
       initialData: {
         id,
         title,
-        status,
-        content,
+        description,
         dueDate,
       },
+      status,
       onTasksUpdate,
     });
   };
@@ -46,7 +62,16 @@ export default function Card({
   };
 
   return (
-    <div className="my-12 flex h-140 flex-col rounded-4 border border-solid bg-white/15 p-12 md:min-h-180 md:p-16">
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+      className={clsx(
+        "my-12 flex h-140 flex-col rounded-4 border border-solid bg-white/15 p-12 md:min-h-180 md:p-16",
+        isDragging && "opacity-50",
+      )}
+    >
       <div className="flex justify-between">
         <div className="flex items-center">
           <span className="mr-6 line-clamp-1 text-18 font-semibold md:text-22">
@@ -65,7 +90,7 @@ export default function Card({
         </Popover>
       </div>
       <div className="max-h-100 overflow-auto text-14 md:text-16">
-        {content}
+        {description}
       </div>
       <span className="mt-auto inline-block text-right text-12 md:text-14">
         마감일: {dueDate}

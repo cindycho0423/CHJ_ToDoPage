@@ -1,27 +1,39 @@
 "use client";
 
 import { useModalStore } from "@/store/useModalStore";
-import { Task } from "@/types/task";
+import { KanbanData } from "@/types/todo";
 
 import Button from "./common/button";
 import Modal from "./common/modal";
 
 interface DeleteModalProps {
   id: string;
-  onTasksUpdate: (tasks: Task[]) => void;
+  onTasksUpdate: (kanbanData: KanbanData) => void;
 }
 
 export default function DeleteModal({ id, onTasksUpdate }: DeleteModalProps) {
   const { isOpen, closeModal } = useModalStore();
+
   const handleDelete = () => {
     try {
-      const savedTasks = localStorage.getItem("tasks");
-      const currentTasks: Task[] = savedTasks ? JSON.parse(savedTasks) : [];
+      const savedData = localStorage.getItem("KanbanData");
+      const currentKanban: KanbanData = savedData
+        ? JSON.parse(savedData)
+        : {
+            TODO: [],
+            ON_PROGRESS: [],
+            DONE: [],
+          };
 
-      const updatedTasks = currentTasks.filter((task) => task.id !== id);
+      // 모든 컬럼에서 해당 id를 가진 태스크를 찾아 제거
+      const updatedKanban: KanbanData = {
+        TODO: currentKanban.TODO.filter((task) => task.id !== id),
+        ON_PROGRESS: currentKanban.ON_PROGRESS.filter((task) => task.id !== id),
+        DONE: currentKanban.DONE.filter((task) => task.id !== id),
+      };
 
-      localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-      onTasksUpdate(updatedTasks);
+      localStorage.setItem("KanbanData", JSON.stringify(updatedKanban));
+      onTasksUpdate(updatedKanban);
       closeModal();
     } catch (error) {
       // 에러 토스트 처리

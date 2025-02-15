@@ -1,55 +1,111 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { closestCenter, DndContext, DragOverEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { useEffect, useState } from "react";
 
 import Column from "@/components/column";
-import { KANBAN_COLUMNS } from "@/constants/kanban";
-import { Task } from "@/types/task";
+import type { KanbanData, TodoStatus } from "@/types/todo";
 
-export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+interface KanbanBoardProps {
+  initialData: KanbanData;
+}
+
+export default function KanbanBoard({ initialData }: KanbanBoardProps) {
+  const [todos, setTodos] = useState<KanbanData>(initialData);
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
+    const savedData = localStorage.getItem("KanbanData");
+    if (savedData) {
       try {
-        const parsedTasks = JSON.parse(savedTasks);
-        setTasks(parsedTasks);
+        const parsedData = JSON.parse(savedData);
+        setTodos(parsedData);
       } catch (e) {
-        localStorage.removeItem("tasks");
+        alert("데이터를 받아오는 중에 에러가 났습니다.");
       }
     }
   }, []);
 
-  const handleTasksUpdate = (updatedTasks: Task[]) => {
-    setTasks(updatedTasks);
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    const activeData = active.data.current;
+    const overData = over.data.current;
+
+    const activeStatus: TodoStatus = activeData?.status;
+    const activeIndex = activeData?.index;
+
+    const overStatus: TodoStatus =
+      overData?.type === "Card" ? overData.status : (over.id as TodoStatus);
+    const overIndex =
+      overData?.type === "Card" ? overData.index : todos[overStatus].length;
+
+    if (activeStatus === overStatus) {
+      setTodos((prev) => ({
+        ...prev,
+        [activeStatus]: arrayMove(prev[activeStatus], activeIndex, overIndex),
+      }));
+    } else {
+      setTodos((prev) => {
+        const activeCards = [...prev[activeStatus]];
+        const overCards = [...prev[overStatus]];
+        const [movedCard] = activeCards.splice(activeIndex, 1);
+
+        overCards.splice(overIndex, 0, movedCard);
+
+        return {
+          ...prev,
+          [activeStatus]: activeCards,
+          [overStatus]: overCards,
+        };
+      });
+    }
   };
 
-  const columnCards = useMemo(
-    () =>
-      KANBAN_COLUMNS.reduce(
-        (acc, column) => {
-          acc[column.id] = tasks.filter((card) => card.status === column.id);
-          return acc;
-        },
-        {} as Record<string, Task[]>,
-      ),
-    [tasks],
-  );
+  const handleDragEnd = () => {
+    try {
+      localStorage.setItem("KanbanData", JSON.stringify(todos));
+    } catch (e) {
+      alert("데이터를 저장하는 중에 에러가 났습니다.");
+    }
+  };
 
   return (
-    <main className="h-fit p-24 md:flex md:overflow-scroll">
-      {KANBAN_COLUMNS.map((column) => (
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex h-fit min-h-full flex-col p-20 md:flex-row">
         <Column
-          key={column.id}
-          status={column.id}
-          title={column.title}
-          color={column.color}
-          hasBorder={column.hasBorder}
-          cards={columnCards[column.id]}
-          onTasksUpdate={handleTasksUpdate}
+          status="TODO"
+          title="Todo"
+          color="red"
+          cards={todos?.TODO}
+          onTasksUpdate={setTodos}
         />
-      ))}
-    </main>
+        <Column
+          status="ON_PROGRESS"
+          title="OnProgress"
+          color="blue"
+          hasBorder
+          cards={todos?.ON_PROGRESS}
+          onTasksUpdate={setTodos}
+        />
+        <Column
+          status="DONE"
+          title="Done"
+          color="green"
+          cards={todos?.DONE}
+          onTasksUpdate={setTodos}
+        />
+      </div>
+    </DndContext>
   );
 }
