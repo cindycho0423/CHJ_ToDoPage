@@ -38,7 +38,7 @@ export default function Home() {
   );
 
   return (
-    <main className="p-24 md:flex">
+    <main className="h-fit p-24 md:flex md:overflow-scroll">
       {KANBAN_COLUMNS.map((column) => (
         <Column
           key={column.id}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useModalStore } from "@/store/useModalStore";
 import { useEffect, useState } from "react";
+
+import { useModalStore } from "@/store/useModalStore";
 
 export default function ModalProvider() {
   const { component } = useModalStore();
