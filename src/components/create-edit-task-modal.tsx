@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useId } from "react";
 import { useForm } from "react-hook-form";
+import { v4 as uuid } from "uuid";
 
 import taskSchema from "@/schemas/createTask";
 import { useModalStore } from "@/store/useModalStore";
@@ -26,7 +26,7 @@ export default function CreateEditTaskModal({
   onTasksUpdate,
 }: CreateEditTaskModalProps) {
   const { isOpen, closeModal } = useModalStore();
-  const id = useId();
+  const id = uuid();
   const {
     register,
     handleSubmit,
