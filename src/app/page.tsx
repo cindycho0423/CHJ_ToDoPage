@@ -1,52 +1,41 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Column from "@/components/column";
 import { KANBAN_COLUMNS } from "@/constants/kanban";
-import { Task } from "@/types/task";
+import type { KanbanData, TodoStatus } from "@/types/todo";
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [kanbanData, setKanbanData] = useState<KanbanData>();
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    if (savedTasks) {
+    const savedData = localStorage.getItem("KanbanData");
+    if (savedData) {
       try {
-        const parsedTasks = JSON.parse(savedTasks);
-        setTasks(parsedTasks);
+        const parsedData = JSON.parse(savedData);
+        setKanbanData(parsedData);
       } catch (e) {
-        localStorage.removeItem("tasks");
+        alert("데이터를 받아오는 중에 에러가 났습니다.");
       }
     }
   }, []);
 
-  const handleTasksUpdate = (updatedTasks: Task[]) => {
-    setTasks(updatedTasks);
+  const handleTasksUpdate = (updatedTodo: KanbanData) => {
+    setKanbanData(updatedTodo);
+    localStorage.setItem("KanbanData", JSON.stringify(updatedTodo));
   };
 
-  const columnCards = useMemo(
-    () =>
-      KANBAN_COLUMNS.reduce(
-        (acc, column) => {
-          acc[column.id] = tasks.filter((card) => card.status === column.id);
-          return acc;
-        },
-        {} as Record<string, Task[]>,
-      ),
-    [tasks],
-  );
-
   return (
-    <main className="h-fit p-24 md:flex md:overflow-scroll">
+    <main className="h-fit min-h-full p-24 md:flex md:overflow-scroll">
       {KANBAN_COLUMNS.map((column) => (
         <Column
           key={column.id}
-          status={column.id}
+          status={column.id as TodoStatus}
           title={column.title}
           color={column.color}
           hasBorder={column.hasBorder}
-          cards={columnCards[column.id]}
+          cards={kanbanData && kanbanData[column.id]}
           onTasksUpdate={handleTasksUpdate}
         />
       ))}

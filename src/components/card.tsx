@@ -1,26 +1,22 @@
 import Image from "next/image";
 
 import { useModalStore } from "@/store/useModalStore";
-import type { Task, TaskStatus } from "@/types/task";
+import type { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
 import Badge from "./badge";
 import Popover from "./common/popover";
 import CreateEditTask from "./create-edit-task-modal";
 import DeleteModal from "./delete-modal";
 
-interface CardProps {
-  id: string;
-  title: string;
-  content: string;
-  status: TaskStatus;
-  dueDate: string;
-  onTasksUpdate: (tasks: Task[]) => void;
+interface CardProps extends Todo {
+  status: TodoStatus;
+  onTasksUpdate: (kanbanData: KanbanData) => void;
 }
 
 export default function Card({
   id,
   title,
-  content,
+  description,
   status,
   dueDate,
   onTasksUpdate,
@@ -33,10 +29,10 @@ export default function Card({
       initialData: {
         id,
         title,
-        status,
-        content,
+        description,
         dueDate,
       },
+      status,
       onTasksUpdate,
     });
   };
@@ -65,7 +61,7 @@ export default function Card({
         </Popover>
       </div>
       <div className="max-h-100 overflow-auto text-14 md:text-16">
-        {content}
+        {description}
       </div>
       <span className="mt-auto inline-block text-right text-12 md:text-14">
         마감일: {dueDate}

@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 
-import taskSchema from "@/schemas/createTask";
+import todoSchema from "@/schemas/createTodo";
 import { useModalStore } from "@/store/useModalStore";
-import { Task, TaskStatus } from "@/types/task";
+import { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
 import Button from "./common/button";
 import Input from "./common/input";
@@ -14,9 +14,9 @@ import Modal from "./common/modal";
 
 interface CreateEditTaskModalProps {
   mode?: "create" | "edit";
-  initialData?: Task;
-  status?: TaskStatus;
-  onTasksUpdate?: (tasks: Task[]) => void;
+  initialData?: Todo;
+  status?: TodoStatus;
+  onTasksUpdate?: (kanbanData: KanbanData) => void;
 }
 
 export default function CreateEditTaskModal({
@@ -33,34 +33,62 @@ export default function CreateEditTaskModal({
     formState: { errors, isSubmitting },
     reset,
     setError,
-  } = useForm<Task>({
-    resolver: zodResolver(taskSchema),
+  } = useForm<Todo>({
+    resolver: zodResolver(todoSchema),
     defaultValues: initialData,
   });
 
-  const onSubmit = async (data: Task) => {
+  const onSubmit = async (data: Todo) => {
     try {
-      const savedTasks = localStorage.getItem("tasks");
-      const currentTasks: Task[] = savedTasks ? JSON.parse(savedTasks) : [];
+      const savedTodo = localStorage.getItem("KanbanData");
+      const currentKanban: KanbanData = savedTodo
+        ? JSON.parse(savedTodo)
+        : {
+            TODO: [],
+            ON_PROGRESS: [],
+            DONE: [],
+          };
 
       if (mode === "create") {
-        const newTask = {
+        const newTask: Todo = {
           ...data,
           id: id,
-          status: status || "todo",
         };
-        const updatedTasks = [newTask, ...currentTasks];
-        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-        onTasksUpdate?.(updatedTasks);
+
+        const targetStatus = status || "TODO";
+
+        currentKanban[targetStatus] = [newTask, ...currentKanban[targetStatus]];
+
+        localStorage.setItem("KanbanData", JSON.stringify(currentKanban));
+        onTasksUpdate?.(currentKanban);
       } else if (mode === "edit" && initialData) {
-        const updatedTasks = currentTasks.map((task) =>
-          task.id === initialData.id
-            ? { ...data, id: task.id, status: task.status }
-            : task,
-        );
-        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-        onTasksUpdate?.(updatedTasks);
+        const updatedKanban = { ...currentKanban };
+        let found = false;
+
+        for (const column of ["TODO", "ON_PROGRESS", "DONE"] as const) {
+          const taskIndex = currentKanban[column].findIndex(
+            (task) => task.id === initialData.id,
+          );
+
+          if (taskIndex !== -1) {
+            updatedKanban[column] = [...currentKanban[column]];
+            updatedKanban[column][taskIndex] = {
+              ...data,
+              id: initialData.id,
+            };
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          throw new Error("Task not found");
+        }
+
+        localStorage.setItem("KanbanData", JSON.stringify(updatedKanban));
+        onTasksUpdate?.(updatedKanban);
       }
+
       reset();
       closeModal();
     } catch (e) {
@@ -96,14 +124,14 @@ export default function CreateEditTaskModal({
             설명
           </label>
           <textarea
-            id="content"
+            id="description"
             placeholder="설명을 입력해주세요"
             className="mb-12 w-full rounded-4 border border-solid bg-black/80 p-10 outline-none"
-            {...register("content")}
+            {...register("description")}
           />
-          {errors.content && (
+          {errors.description && (
             <p className="mt-2 text-sm text-red-500">
-              {errors.content.message}
+              {errors.description.message}
             </p>
           )}
         </div>

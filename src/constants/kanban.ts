@@ -1,18 +1,18 @@
 export const KANBAN_COLUMNS = [
   {
-    id: "todo",
+    id: "TODO",
     title: "Todo",
     color: "red",
     hasBorder: false,
   },
   {
-    id: "onProgress",
+    id: "ON_PROGRESS",
     title: "OnProgress",
     color: "green",
     hasBorder: true,
   },
   {
-    id: "done",
+    id: "DONE",
     title: "Done",
     color: "blue",
     hasBorder: false,

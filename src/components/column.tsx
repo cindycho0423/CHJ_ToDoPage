@@ -4,25 +4,19 @@ import clsx from "clsx";
 import Image from "next/image";
 
 import { useModalStore } from "@/store/useModalStore";
-import type { Task, TaskStatus } from "@/types/task";
+import type { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
 import Card from "./card";
 import Button from "./common/button";
 import CreateEditTaskModal from "./create-edit-task-modal";
 
 interface ColumnProps {
-  status: TaskStatus;
+  status: TodoStatus;
   title: string;
   color: "red" | "green" | "blue";
   hasBorder?: boolean;
-  cards?: Array<{
-    id: string;
-    title: string;
-    content: string;
-    status: TaskStatus;
-    dueDate: string;
-  }>;
-  onTasksUpdate: (tasks: Task[]) => void;
+  cards?: Todo[];
+  onTasksUpdate: (todos: KanbanData) => void;
 }
 
 const colorClasses = {
@@ -47,8 +41,7 @@ export default function Column({
       initialData: {
         id: "",
         title: "",
-        status: status,
-        content: "",
+        description: "",
         dueDate: "",
       },
       status: status,
@@ -87,7 +80,12 @@ export default function Column({
         </Button>
       </div>
       {cards.map((card) => (
-        <Card key={card.id} {...card} onTasksUpdate={onTasksUpdate} />
+        <Card
+          key={card.id}
+          status={status}
+          {...card}
+          onTasksUpdate={onTasksUpdate}
+        />
       ))}
     </div>
   );
