@@ -1,5 +1,10 @@
-import { DragOverEvent } from "@dnd-kit/core";
+import { DragOverEvent, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  KeyboardSensor as LibKeyboardSensor,
+  MouseSensor as LibMouseSensor,
+} from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
 import type { KanbanData, TodoStatus } from "@/types/todo";
@@ -126,6 +131,59 @@ export const useKanbanBoard = () => {
     }
   };
 
+  /**
+   * DOM 트리를 순회하면서 드래그 앤 드롭 처리 여부를 확인하는 함수
+   * 'data-no-dnd' 속성이 있는 요소를 만나면 드래그 앤 드롭을 비활성화합니다.
+   *
+   * @param element - 검사할 DOM 요소
+   * @returns {boolean} - 드래그 앤 드롭 처리 여부 (true: 처리함, false: 처리하지 않음)
+   */
+  function shouldHandleEvent(element: HTMLElement | null): boolean {
+    let cur = element;
+    while (cur) {
+      if (cur.dataset && cur.dataset.noDnd) {
+        return false;
+      }
+      cur = cur.parentElement;
+    }
+    return true;
+  }
+
+  /**
+   * 마우스 드래그 앤 드롭을 위한 커스텀 센서 클래스
+   * LibMouseSensor를 확장하여 특정 요소에서 드래그 앤 드롭이 발생하지 않도록 제어합니다.
+   */
+  class CustomMouseSensor extends LibMouseSensor {
+    static activators = [
+      {
+        eventName: "onMouseDown" as const,
+        handler: ({ nativeEvent: event }: MouseEvent) => {
+          return shouldHandleEvent(event.target as HTMLElement);
+        },
+      },
+    ];
+  }
+
+  /**
+   * 키보드 드래그 앤 드롭을 위한 커스텀 센서 클래스
+   * LibKeyboardSensor를 확장하여 특정 요소에서 드래그 앤 드롭이 발생하지 않도록 제어합니다.
+   */
+  class CustomKeyboardSensor extends LibKeyboardSensor {
+    static activators = [
+      {
+        eventName: "onKeyDown" as const,
+        handler: ({ nativeEvent: event }: KeyboardEvent) => {
+          return shouldHandleEvent(event.target as HTMLElement);
+        },
+      },
+    ];
+  }
+
+  const sensors = useSensors(
+    useSensor(CustomMouseSensor),
+    useSensor(CustomKeyboardSensor),
+  );
+
   useEffect(() => {
     handleInitialLoad();
   }, []);
@@ -135,5 +193,6 @@ export const useKanbanBoard = () => {
     setTodos,
     handleDragOver,
     handleDragEnd,
+    sensors,
   };
 };

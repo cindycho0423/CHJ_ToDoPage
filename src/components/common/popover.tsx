@@ -57,7 +57,7 @@ export default function Popover({ children }: { children: React.ReactNode }) {
 
   return (
     <PopoverContext.Provider value={providerValue}>
-      <div ref={dropdownRef} className="relative">
+      <div ref={dropdownRef} className="relative" data-no-dnd>
         {children}
       </div>
     </PopoverContext.Provider>

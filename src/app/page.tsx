@@ -6,10 +6,12 @@ import Column from "@/components/column";
 import { useKanbanBoard } from "@/hooks/useKanbanBoard";
 
 export default function KanbanBoard() {
-  const { todos, setTodos, handleDragOver, handleDragEnd } = useKanbanBoard();
+  const { todos, setTodos, handleDragOver, handleDragEnd, sensors } =
+    useKanbanBoard();
 
   return (
     <DndContext
+      sensors={sensors}
       collisionDetection={closestCenter}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
