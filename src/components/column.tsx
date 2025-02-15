@@ -36,7 +36,7 @@ export default function Column({
 }: ColumnProps) {
   const { openModal } = useModalStore();
   const { isOver, setNodeRef } = useDroppable({
-    id: status, // 각 컬럼의 고유 ID로 status를 사용
+    id: status,
   });
 
   const handleCreateTask = () => {

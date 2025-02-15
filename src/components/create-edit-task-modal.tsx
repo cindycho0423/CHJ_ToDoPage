@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { v4 as uuid } from "uuid";
 
 import todoSchema from "@/schemas/createTodo";
 import { useModalStore } from "@/store/useModalStore";
 import { KanbanData, Todo, TodoStatus } from "@/types/todo";
+import { createTask, updateTask } from "@/utils/kanbanStorage";
 
 import Button from "./common/button";
 import Input from "./common/input";
@@ -16,7 +16,7 @@ interface CreateEditTaskModalProps {
   mode?: "create" | "edit";
   initialData?: Todo;
   status?: TodoStatus;
-  onTasksUpdate?: (kanbanData: KanbanData) => void;
+  onTasksUpdate: (kanbanData: KanbanData) => void;
 }
 
 export default function CreateEditTaskModal({
@@ -26,7 +26,7 @@ export default function CreateEditTaskModal({
   onTasksUpdate,
 }: CreateEditTaskModalProps) {
   const { isOpen, closeModal } = useModalStore();
-  const id = uuid();
+
   const {
     register,
     handleSubmit,
@@ -40,55 +40,11 @@ export default function CreateEditTaskModal({
 
   const onSubmit = async (data: Todo) => {
     try {
-      const savedTodo = localStorage.getItem("KanbanData");
-      const currentKanban: KanbanData = savedTodo
-        ? JSON.parse(savedTodo)
-        : {
-            TODO: [],
-            ON_PROGRESS: [],
-            DONE: [],
-          };
-
       if (mode === "create") {
-        const newTask: Todo = {
-          ...data,
-          id: id,
-        };
-
-        const targetStatus = status || "TODO";
-
-        currentKanban[targetStatus] = [newTask, ...currentKanban[targetStatus]];
-
-        localStorage.setItem("KanbanData", JSON.stringify(currentKanban));
-        onTasksUpdate?.(currentKanban);
+        createTask(data, status || "TODO", onTasksUpdate);
       } else if (mode === "edit" && initialData) {
-        const updatedKanban = { ...currentKanban };
-        let found = false;
-
-        for (const column of ["TODO", "ON_PROGRESS", "DONE"] as const) {
-          const taskIndex = currentKanban[column].findIndex(
-            (task) => task.id === initialData.id,
-          );
-
-          if (taskIndex !== -1) {
-            updatedKanban[column] = [...currentKanban[column]];
-            updatedKanban[column][taskIndex] = {
-              ...data,
-              id: initialData.id,
-            };
-            found = true;
-            break;
-          }
-        }
-
-        if (!found) {
-          throw new Error("Task not found");
-        }
-
-        localStorage.setItem("KanbanData", JSON.stringify(updatedKanban));
-        onTasksUpdate?.(updatedKanban);
+        updateTask(data, initialData, onTasksUpdate);
       }
-
       reset();
       closeModal();
     } catch (e) {
