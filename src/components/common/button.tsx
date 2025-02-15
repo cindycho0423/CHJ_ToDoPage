@@ -1,30 +1,42 @@
-import clsx from "clsx";
-import { ComponentProps } from "react";
+import { HTMLMotionProps, motion } from "framer-motion";
 
-interface ButtonProps extends ComponentProps<"button"> {
-  text: string;
+import cn from "@/utils/cn";
+
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   type: "button" | "submit";
+  text?: string;
   onClick?: () => void;
   className?: string;
+  children?: React.ReactNode;
 }
+
 export default function Button({
-  text,
   type = "button",
+  text,
   onClick,
   className,
+  children,
   ...props
 }: ButtonProps) {
   return (
-    <button
+    <motion.button
       type={type}
-      className={clsx(
+      className={cn(
         "mt-12 inline-block w-full rounded-4 border border-solid px-10 py-6",
         className,
       )}
       onClick={onClick}
+      whileHover={{
+        scale: 0.98,
+        transition: { duration: 0.3 },
+      }}
+      whileTap={{
+        scale: 0.96,
+      }}
       {...props}
     >
       {text}
-    </button>
+      {children}
+    </motion.button>
   );
 }

@@ -7,6 +7,7 @@ import { useModalStore } from "@/store/useModalStore";
 import type { Task, TaskStatus } from "@/types/task";
 
 import Card from "./card";
+import Button from "./common/button";
 import CreateEditTaskModal from "./create-edit-task-modal";
 
 interface ColumnProps {
@@ -71,9 +72,9 @@ export default function Column({
         >
           {title}
         </div>
-        <button
+        <Button
           type="button"
-          className="size-30 rounded-4 border border-solid md:mt-12 md:w-full"
+          className="size-30 rounded-4 border border-solid p-0 hover:bg-white/20 md:mt-12 md:w-full"
           onClick={handleCreateTask}
         >
           <Image
@@ -83,7 +84,7 @@ export default function Column({
             height={25}
             className="m-auto"
           />
-        </button>
+        </Button>
       </div>
       {cards.map((card) => (
         <Card key={card.id} {...card} onTasksUpdate={onTasksUpdate} />
