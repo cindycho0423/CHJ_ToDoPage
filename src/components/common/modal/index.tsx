@@ -1,7 +1,8 @@
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+
+import cn from "@/utils/cn";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -52,7 +53,7 @@ export default function Modal({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className={clsx(className, "relative z-10 rounded-12 bg-black p-26")}
+          className={cn(className, "relative z-10 rounded-12 bg-black p-26")}
           role="dialog"
           aria-modal="true"
         >
