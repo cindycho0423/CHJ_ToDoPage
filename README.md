@@ -27,7 +27,7 @@
 
 ```bash
 git clone [repository-url]
-cd CHJ_ToDoPage
+cd Kanban
 ```
 
 2. 의존성 설치
