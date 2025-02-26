@@ -2,7 +2,8 @@
 <img width="1207" alt="Screenshot 2025-02-16 at 8 43 48 AM" src="https://github.com/user-attachments/assets/9de6ae21-46a8-45fd-bce3-7380e9670772" />
 
 드래그 앤 드롭 기능을 활용한 칸반 보드 프로젝트입니다. 할 일 목록을 Todo, In Progress, Done 상태로 관리할 수 있으며, 로컬 스토리지를 활용하여 데이터를 저장합니다.
-🔗 배포주소: kanban-pied-eight.vercel.app
+
+**🔗 배포주소: kanban-pied-eight.vercel.app**
 
 ## ✅ 주요 기능
 
