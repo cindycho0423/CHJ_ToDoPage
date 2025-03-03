@@ -58,7 +58,7 @@ export default function Card({
   };
 
   const handleDelete = () => {
-    openModal(DeleteModal, { id, onTasksUpdate });
+    openModal(DeleteModal, { id, status, onTasksUpdate });
   };
 
   return (

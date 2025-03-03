@@ -1,22 +1,27 @@
 "use client";
 
+import { deleteTodo } from "@/api/deleteTodo";
 import { useModalStore } from "@/store/useModalStore";
-import { KanbanData } from "@/types/todo";
-import { deleteTask } from "@/utils/kanbanStorage";
+import { KanbanData, TodoStatus } from "@/types/todo";
 
 import Button from "./common/button";
 import Modal from "./common/modal";
 
 interface DeleteModalProps {
   id: string;
+  status: TodoStatus;
   onTasksUpdate: (kanbanData: KanbanData) => void;
 }
 
-export default function DeleteModal({ id, onTasksUpdate }: DeleteModalProps) {
+export default function DeleteModal({
+  id,
+  status,
+  onTasksUpdate,
+}: DeleteModalProps) {
   const { isOpen, closeModal } = useModalStore();
   const handleDelete = () => {
     try {
-      deleteTask(id, onTasksUpdate);
+      deleteTodo(id, status, onTasksUpdate);
       closeModal();
     } catch {
       alert("삭제 중 문제가 발생했습니다. 다시 시도해보세요.");

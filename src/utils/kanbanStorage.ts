@@ -74,24 +74,3 @@ export const updateTask = (
   localStorage.setItem("KanbanData", JSON.stringify(updatedKanban));
   onTasksUpdate?.(updatedKanban);
 };
-
-/**
- * 특정 할 일을 삭제합니다.
- * @param {string} id - 삭제할 할 일의 ID
- * @param {(updatedKanban: KanbanData) => void} onTasksUpdate - 업데이트된 Kanban 데이터를 처리하는 콜백 함수
- */
-export const deleteTask = (
-  id: string,
-  onTasksUpdate: (updatedKanban: KanbanData) => void,
-) => {
-  const currentKanban = getStoredKanbanData();
-
-  const updatedKanban: KanbanData = {
-    TODO: currentKanban.TODO.filter((task) => task.id !== id),
-    ON_PROGRESS: currentKanban.ON_PROGRESS.filter((task) => task.id !== id),
-    DONE: currentKanban.DONE.filter((task) => task.id !== id),
-  };
-
-  localStorage.setItem("KanbanData", JSON.stringify(updatedKanban));
-  onTasksUpdate(updatedKanban);
-};
