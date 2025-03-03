@@ -27,7 +27,6 @@ const initialKanbanData: KanbanData = {
  */
 export const useKanbanBoard = () => {
   const [todos, setTodos] = useState<KanbanData>(initialKanbanData);
-
   /**
    * 같은 컬럼 내에서 카드의 순서를 변경합니다.
    * @param {TodoStatus} activeStatus - 현재 드래그 중인 카드의 상태
@@ -179,7 +178,7 @@ export const useKanbanBoard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getKanbanData();
-      setTodos(data[0]);
+      setTodos(data);
     };
     fetchData();
   }, []);

@@ -1,6 +1,6 @@
 import { KanbanData } from "@/types/todo";
 
-export const getKanbanData = async (): Promise<KanbanData[]> => {
+export const getKanbanData = async (): Promise<KanbanData> => {
   try {
     const response = await fetch("/api");
     if (!response.ok) throw new Error("칸반 데이타 불러오기 실패");
