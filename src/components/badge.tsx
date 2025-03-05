@@ -13,8 +13,8 @@ export default function Badge({ status }: BadgeProps) {
         "h-16 rounded-md px-4 py-2 text-8",
         {
           TODO: "bg-red-100 text-red-600",
-          ON_PROGRESS: "bg-green-100 text-green-600",
-          DONE: "bg-blue-100 text-blue-600",
+          ON_PROGRESS: "bg-blue-100 text-blue-600",
+          DONE: "bg-green-100 text-green-600",
         }[status],
       )}
     >

@@ -1,4 +1,4 @@
-import { KanbanData, Todo, TodoStatus } from "@/types/todo";
+import { KanbanData, Todo } from "@/types/todo";
 
 /**
  * 로컬 스토리지에서 Kanban 데이터를 불러옵니다.
@@ -15,25 +15,6 @@ export const getStoredKanbanData = (): KanbanData => {
     alert("데이터를 불러오는 중 오류가 발생했습니다.");
     return { TODO: [], ON_PROGRESS: [], DONE: [] };
   }
-};
-
-/**
- * 새로운 할 일을 생성하여 Kanban 보드에 추가합니다.
- * @param {Todo} data - 생성할 할 일 데이터
- * @param {TodoStatus} status - 할 일이 추가될 컬럼 (TODO, ON_PROGRESS, DONE)
- * @param {(updatedKanban: KanbanData) => void} onTasksUpdate - 업데이트된 Kanban 데이터를 처리하는 콜백 함수
- */
-export const createTask = (
-  data: Todo,
-  status: TodoStatus,
-  onTasksUpdate: (updatedKanban: KanbanData) => void,
-) => {
-  const currentKanban = getStoredKanbanData();
-  const newTask: Todo = { ...data, id: crypto.randomUUID() };
-
-  currentKanban[status] = [newTask, ...currentKanban[status]];
-  localStorage.setItem("KanbanData", JSON.stringify(currentKanban));
-  onTasksUpdate?.(currentKanban);
 };
 
 /**
