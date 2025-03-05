@@ -4,7 +4,7 @@
 
 드래그 앤 드롭 기능을 활용한 칸반 보드 프로젝트입니다. 할 일 목록을 Todo, In Progress, Done 상태로 관리할 수 있으며, firestore를 활용하여 데이터를 저장합니다.
 
-<h3><a href='kanban-pied-eight.vercel.app'>🔗 배포주소</a></h3>
+[🔗 배포주소](https://kanban-pied-eight.vercel.app)
 
 ## ✅ 주요 기능
 
