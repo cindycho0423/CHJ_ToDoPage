@@ -7,8 +7,8 @@ import { arrayMove } from "@dnd-kit/sortable";
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
-import { getKanbanData } from "@/api/getKanban";
-import { updateKanbanData } from "@/api/updateKanban";
+import { getKanbanData } from "@/api/getKanbanData";
+import { updateKanbanData } from "@/api/updateKanbanData";
 import type { KanbanData, TodoStatus } from "@/types/todo";
 
 const initialKanbanData: KanbanData = {

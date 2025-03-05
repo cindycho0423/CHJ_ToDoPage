@@ -7,7 +7,7 @@ import { KanbanData, Todo, TodoStatus } from "@/types/todo";
  * @param {(updatedKanban: KanbanData) => void} onTasksUpdate - 업데이트된 Kanban 데이터를 처리하는 콜백 함수
  * @returns {Promise<void>}
  */
-export const createTask = async (
+export const createTodo = async (
   data: Todo,
   status: TodoStatus,
   onTasksUpdate: (updatedKanban: KanbanData) => void,

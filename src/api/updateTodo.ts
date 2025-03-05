@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { FIREBASE_DB } from "@/firebase/firebasedb";
 import { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
-import { updateKanbanData } from "./updateKanban";
+import { updateKanbanData } from "./updateKanbanData";
 
 /**
  * 기존 할 일을 수정합니다.

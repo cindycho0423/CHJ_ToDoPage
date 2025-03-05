@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { createTask } from "@/api/createTodo";
+import { createTodo } from "@/api/createTodo";
 import { updateTodo } from "@/api/updateTodo";
 import todoSchema from "@/schemas/createTodo";
 import { useModalStore } from "@/store/useModalStore";
@@ -42,7 +42,7 @@ export default function CreateEditTaskModal({
   const onSubmit = async (data: Todo) => {
     try {
       if (mode === "create") {
-        await createTask(data, status || "TODO", onTasksUpdate);
+        await createTodo(data, status || "TODO", onTasksUpdate);
       } else if (mode === "edit" && initialData) {
         await updateTodo(data, initialData.id, status, onTasksUpdate);
       }
