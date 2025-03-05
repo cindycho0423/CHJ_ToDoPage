@@ -4,10 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { createTask } from "@/api/createTodo";
+import { updateTodo } from "@/api/updateTodo";
 import todoSchema from "@/schemas/createTodo";
 import { useModalStore } from "@/store/useModalStore";
 import { KanbanData, Todo, TodoStatus } from "@/types/todo";
-import { updateTask } from "@/utils/kanbanStorage";
 
 import Button from "./common/button";
 import Input from "./common/input";
@@ -44,7 +44,7 @@ export default function CreateEditTaskModal({
       if (mode === "create") {
         await createTask(data, status || "TODO", onTasksUpdate);
       } else if (mode === "edit" && initialData) {
-        updateTask(data, initialData, onTasksUpdate);
+        await updateTodo(data, initialData, onTasksUpdate);
       }
       reset();
       closeModal();
