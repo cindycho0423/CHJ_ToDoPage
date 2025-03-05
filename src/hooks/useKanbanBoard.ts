@@ -8,6 +8,7 @@ import type { KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
 import { getKanbanData } from "@/api/getKanban";
+import { updateKanbanData } from "@/api/updateKanban";
 import type { KanbanData, TodoStatus } from "@/types/todo";
 
 const initialKanbanData: KanbanData = {
@@ -23,10 +24,16 @@ const initialKanbanData: KanbanData = {
  *   setTodos: React.Dispatch<React.SetStateAction<KanbanData>>;
  *   handleDragOver: (event: DragOverEvent) => void;
  *   handleDragEnd: () => void;
+ *   sensors: SensorDescriptor<any>[];
+ *   isLoading: boolean;
+ *   error: string | null;
  * }} Kanban 보드 관련 상태 및 핸들러 반환
  */
 export const useKanbanBoard = () => {
   const [todos, setTodos] = useState<KanbanData>(initialKanbanData);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   /**
    * 같은 컬럼 내에서 카드의 순서를 변경합니다.
    * @param {TodoStatus} activeStatus - 현재 드래그 중인 카드의 상태
@@ -112,13 +119,18 @@ export const useKanbanBoard = () => {
   };
 
   /**
-   * 드래그가 끝났을 때 Kanban 데이터를 로컬 스토리지에 저장합니다.
+   * 드래그가 끝났을 때 Firestore에 Kanban 데이터를 저장합니다.
    */
-  const handleDragEnd = () => {
+  const handleDragEnd = async () => {
     try {
-      localStorage.setItem("KanbanData", JSON.stringify(todos));
-    } catch (e) {
+      setIsLoading(true);
+      await updateKanbanData(todos);
+      setError(null);
+    } catch (err) {
+      setError((err as Error).message);
       alert("데이터를 저장하는 중에 에러가 났습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -189,5 +201,7 @@ export const useKanbanBoard = () => {
     handleDragOver,
     handleDragEnd,
     sensors,
+    isLoading,
+    error,
   };
 };

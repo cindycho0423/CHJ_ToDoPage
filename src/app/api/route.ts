@@ -180,4 +180,57 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
-// sanitize 써보기
+
+/**
+ * PATCH 함수 - 할 일을 부분 수정하는 함수
+ * 클라이언트로부터 받은 ID, 상태값, 그리고 업데이트할 데이터를 기반으로 할 일을 수정합니다.
+ */
+export async function PATCH(request: NextRequest) {
+  try {
+    // 요청 본문에서 업데이트할 칸반 데이터를 가져옵니다
+    const { updatedKanban } = await request.json();
+
+    // 업데이트할 데이터가 없는 경우 400 에러를 반환합니다
+    if (!updatedKanban) {
+      return NextResponse.json(
+        { error: "업데이트할 데이터가 없습니다" },
+        { status: 400 },
+      );
+    }
+
+    // 유효한 KanbanData 구조인지 확인합니다
+    if (
+      !updatedKanban.TODO ||
+      !updatedKanban.ON_PROGRESS ||
+      !updatedKanban.DONE ||
+      !Array.isArray(updatedKanban.TODO) ||
+      !Array.isArray(updatedKanban.ON_PROGRESS) ||
+      !Array.isArray(updatedKanban.DONE)
+    ) {
+      return NextResponse.json(
+        { error: "유효하지 않은 칸반 데이터 구조입니다" },
+        { status: 400 },
+      );
+    }
+
+    // Firestore의 칸반 데이터 문서를 참조합니다
+    const docRef = doc(FIREBASE_DB, "KanbanData", "board");
+
+    // 업데이트된 칸반 데이터를 Firestore에 저장합니다
+    await setDoc(docRef, updatedKanban);
+
+    // 업데이트 성공 메시지와 업데이트된 칸반 데이터를 반환합니다
+    return NextResponse.json(
+      {
+        message: "칸반 보드가 성공적으로 업데이트되었습니다",
+        kanbanData: updatedKanban,
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "칸반 보드를 업데이트하는 중 에러 발생" },
+      { status: 500 },
+    );
+  }
+}
