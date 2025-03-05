@@ -44,7 +44,7 @@ export default function CreateEditTaskModal({
       if (mode === "create") {
         await createTask(data, status || "TODO", onTasksUpdate);
       } else if (mode === "edit" && initialData) {
-        await updateTodo(data, initialData, onTasksUpdate);
+        await updateTodo(data, initialData.id, status, onTasksUpdate);
       }
       reset();
       closeModal();
