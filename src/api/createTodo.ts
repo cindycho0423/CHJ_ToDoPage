@@ -33,7 +33,7 @@ export const createTodo = async (
 
     const result = await response.json();
 
-    onTasksUpdate?.(result.kanbanData);
+    onTasksUpdate(result.kanbanData);
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "칸반 데이타 생성하기 실패",

@@ -32,7 +32,7 @@ export const deleteTodo = async (
     const result = await response.json();
 
     // 콜백 함수를 통해 업데이트된 칸반 데이터를 상위 컴포넌트에 전달
-    onTasksUpdate?.(result.kanbanData);
+    onTasksUpdate(result.kanbanData);
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "칸반 데이터 삭제하기 실패",
