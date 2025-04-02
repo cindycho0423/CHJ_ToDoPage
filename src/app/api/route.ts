@@ -1,8 +1,8 @@
-import { doc, getDoc, setDoc } from "firebase/firestore"; // Firestore 관련 함수들을 가져옵니다
-import { NextRequest, NextResponse } from "next/server"; // Next.js API 핸들링에 필요한 타입들을 가져옵니다
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { NextRequest, NextResponse } from "next/server";
 
-import { FIREBASE_DB } from "@/firebase/firebasedb"; // Firebase 데이터베이스 연결 객체를 가져옵니다
-import { KanbanData, Todo, TodoStatus } from "@/types/todo"; // 칸반 데이터 관련 타입들을 가져옵니다
+import { FIREBASE_DB } from "@/firebase/firebasedb";
+import { KanbanData, Todo, TodoStatus } from "@/types/todo";
 
 /**
  * GET 함수 - 칸반 보드 데이터를 가져오는 함수
