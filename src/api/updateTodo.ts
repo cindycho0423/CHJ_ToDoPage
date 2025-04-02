@@ -17,12 +17,10 @@ export const updateTodo = async (
   onTasksUpdate?: (updatedKanban: KanbanData) => void,
 ): Promise<void> => {
   try {
-    // 먼저 현재 칸반 데이터를 API를 통해 가져옵니다
     const currentKanban = await getKanbanData();
     const updatedKanban = { ...currentKanban };
     let found = false;
 
-    // 현재 상태(컬럼)를 알고 있는 경우 해당 컬럼만 검색
     if (currentStatus) {
       const taskIndex = updatedKanban[currentStatus].findIndex(
         (task) => task.id === todoId,
